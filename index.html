@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CEDI &middot; Contextualized Evaluation of Vision Language Models through Dynamic, Multi-turn Interactions</title>
+<title>CEDI: Contextualized Evaluation of Vision Language Models through Dynamic, Multi-turn Interactions</title>
 <meta name="description" content="CEDI recasts VLM evaluation as a three-party interaction between an evaluatee, a scene-graph-guided examiner that runs contextualized multi-turn conversations, and a scene-graph-based grader.">
 <meta property="og:title" content="Contextualized Evaluation of Vision Language Models through Dynamic, Multi-turn Interactions">
 <meta property="og:description" content="Static benchmarks miss a non-trivial slice of hallucination behavior that surfaces only in contextualized, dynamic, interactive use.">
@@ -42,7 +42,7 @@ a:hover{text-decoration:underline}
 
 /* ---------- hero ---------- */
 header{padding:64px 0 42px;border-bottom:1px solid var(--line);background:var(--hero-bg)}
-.venue{display:inline-block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);
+.venue{display:inline-block;font-size:14px;color:var(--accent);
        font-weight:650;margin:0 0 14px}
 h1{font-family:var(--serif);font-size:clamp(28px,4.6vw,42px);line-height:1.18;
    color:var(--ink);font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
@@ -240,7 +240,7 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
 
 <header>
   <div class="wrap">
-    <span class="venue">NeurIPS 2026 &middot; Evaluations &amp; Datasets Track</span>
+    <span class="venue">NeurIPS 2026 Evaluations &amp; Datasets Track</span>
     <h1>Contextualized Evaluation of Vision Language Models through Dynamic, Multi-turn Interactions</h1>
     <p class="sub">Evaluate VLMs the way people use them.</p>
 
@@ -251,9 +251,9 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
       Ziang Xiao<sup>4</sup>
     </p>
     <p class="affil">
-      <sup>1</sup>UC San Diego &nbsp;&middot;&nbsp;
-      <sup>2</sup>Northeastern University &nbsp;&middot;&nbsp;
-      <sup>3</sup>Georgia Institute of Technology &nbsp;&middot;&nbsp;
+      <sup>1</sup>UC San Diego &nbsp;&nbsp;&nbsp;
+      <sup>2</sup>Northeastern University &nbsp;&nbsp;&nbsp;
+      <sup>3</sup>Georgia Institute of Technology &nbsp;&nbsp;&nbsp;
       <sup>4</sup>Johns Hopkins University
     </p>
     <p class="eq"><sup>&dagger;</sup>Equal contribution</p>
@@ -647,7 +647,7 @@ function showPop(b) {
   BUBBLES.forEach(function (x) { x.btn.classList.toggle("on", x === b); });
   pop.className = "pop show" + (b.side === "g" ? " g" : "");
   pop.innerHTML = '<button class="x" type="button" aria-label="Close">&times;</button>' +
-    '<div class="kind">' + (b.side === "g" ? "Grader &middot; validation" : "Examiner &middot; ablation") + '</div>' + b.html;
+    '<div class="kind">' + (b.side === "g" ? "Grader validation" : "Examiner ablation") + '</div>' + b.html;
   pop.querySelector(".x").addEventListener("click", function () { hidePop(true); });
   if (window.renderMathInElement) renderMath(pop);
   if (mobile.matches) {
@@ -709,7 +709,7 @@ RADAR.forEach(function (row) {
       var v = row[si + 1][i], p = pt(i, Math.min(1.12, v / a.s) * R);
       var d = el("circle", { cx:p[0], cy:p[1], r: si === 2 ? 3.6 : 2.6, class:"dot", style:"fill:" + s.c }, svg);
       d.addEventListener("mousemove", function (e) {
-        tip.innerHTML = "<b>" + row[0] + " · " + a.k + (a.sub ? "<sub>" + a.sub + "</sub>" : "") + "</b><br>" + SERIES.map(function (ss, j) {
+        tip.innerHTML = "<b>" + row[0] + ": " + a.k + (a.sub ? "<sub>" + a.sub + "</sub>" : "") + "</b><br>" + SERIES.map(function (ss, j) {
           return '<span style="color:' + ss.c + '">●</span> ' + ss.n + ": " + row[j + 1][i]; }).join("<br>");
         tip.style.display = "block";
         tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 220) + "px"; tip.style.top = (e.clientY + 14) + "px";
