@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# venv
+.venv/
+venv/
+
+# Local secrets and outputs
+.env
+out/
+runs/
+work_dirs/
+utils/.vg_cache/
+*.cache.json
+
+# Editor
+.idea/
+.vscode/
+.DS_Store
+
+# Object synset list used by grader/sg/llm_parser.py (not distributed; place it here locally)
+data/filtered_object_synsets_final.json

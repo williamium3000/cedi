@@ -1,0 +1,33 @@
+# Core
+openai>=1.40
+python-dotenv
+pydantic>=2
+
+# Datasets / VG / SVG
+datasets>=2.18
+huggingface_hub<1.0
+pycocotools
+fsspec
+aiohttp
+
+# NLP utilities (scene graph + grader)
+nltk
+networkx
+netrd
+numpy
+matplotlib
+
+# Image / IO
+pillow
+requests
+tqdm
+
+# Model loaders (only what you need; uncomment as appropriate)
+# torch>=2.5            # required for any local examinee
+# torchvision
+# transformers>=4.49
+# accelerate
+# qwen-vl-utils[decord] # for Qwen-VL family
+# timm                  # for InternVL family
+# sentencepiece einops  # for InternVL family
+# omegaconf hydra-core opencv-python  # for Opera/MiniGPT-4 family
