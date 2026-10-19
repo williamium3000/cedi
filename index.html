@@ -289,7 +289,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
 </section>
 
 <section id="abstract">
-  <h2>Abstract</h2>
   <p class="lead">Multi-modal Large Language Models (MLLMs) have made substantial advances on benchmarks, yet their
   real-world effectiveness remains uncertain. This gap stems from the fundamental misalignment between benchmarks in
   <strong>controlled, static settings</strong> and the <strong>dynamic, interactive, and contextualized</strong> nature
@@ -307,21 +306,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   <strong>premise rejection or refusal</strong>. Together, these findings highlight CEDI as a step toward realistic,
   systematic, and ecologically valid assessments of MLLMs' capabilities.</p>
 
-</section>
-
-<section id="motivation">
-  <h2>Why evaluate through interaction?</h2>
-  <p>Vision language models (VLMs) exhibit impressive abilities in visual perception, grounding, and reasoning, by
-  adapting powerful Large Language Models (LLMs). Despite these advances, it remains unclear whether such
-  &ldquo;remarkable capabilities&rdquo; can consistently transfer to realistic, real-world scenarios. A significant gap
-  lies in the stark misalignment between existing benchmarks&mdash;typically static and conducted in controlled,
-  laboratory settings&mdash;and the realistic usage of MLLMs, which is inherently <em>dynamic, multi-turn, and
-  contextualized</em>.</p>
-  <p>To address this misalignment, we revisit MLLM evaluation as a tripartite interplay of (i) the
-  <strong>evaluatee</strong> model, (ii) an <strong>examiner</strong>, and (iii) a <strong>grader</strong>. The examiner
-  interacts with the evaluatee through iterative questioning, and the grader scores the resulting dialogue to produce a
-  final performance measure.</p>
-
   <figure class="wide">
     <img class="zoomable" src="static/images/three_party.png" alt="Left: the evaluatee, examiner and grader in a three-party loop, with grader families (deterministic CHAIR, LLM judges MMHal/VALOR, tool call, scene graph) and examiner families (caption-based, yes/no POPE, dynamic Q&A CEDI). Right: the same street image probed by a caption prompt, by single-turn yes/no questions, and by CEDI's contextualized conversation.">
     <figcaption>CEDI's three-party interaction (left) contrasted with prior static examiners (right). A caption prompt
@@ -329,20 +313,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
     cross&rdquo;), follows up on what it said, and asks about a pedestrian who isn't there &mdash; where a grounded model
     should say &ldquo;I cannot answer&rdquo;.</figcaption>
   </figure>
-
-  <p>CEDI draws inspiration from <strong>evaluative interviews in human assessment</strong>: rather than relying on
-  static, paper-based tests, a semi-structured interview allows the examiner to adapt question type and difficulty
-  based on the model's responses, eliciting more faithful evidence of capability. To better approximate real-world
-  usage, CEDI introduces <strong>context modeling</strong> to operationalize the conversation over user scenarios, and
-  leverages a <strong>graph-based representation</strong> to provide a manipulable state space for both the examiner
-  and the grader, enabling strategies ranging from clarification requests to adversarial probes.</p>
-  <p>We apply CEDI to <strong>visual hallucination</strong>. Closely analogous to the hallucination problem in LLMs,
-  visual hallucination refers to cases where models generate outputs that are not faithful to the image content, such
-  as describing non-existent objects, hallucinating attributes, or fabricating incorrect relations. Existing evaluation
-  approaches often adopt static captioning tasks in closed settings or rely on simple binary questions to assess object
-  presence; others validate the correctness of object descriptions or generate open-ended image captions as a proxy
-  for hallucination detection. While informative, these methods struggle to capture the nuanced, contextualized, and
-  multi-turn nature of real-world usage where visual hallucinations arise as critical problems.</p>
 </section>
 
 <section id="method">
@@ -481,31 +451,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   d=d_{\Delta}+\lambda d_{\mathcal{A}}$$
 </section>
 
-<section id="setup">
-  <h2>Experimental setup</h2>
-  <ul class="tight">
-    <li><strong>Datasets.</strong> 100 images from human-annotated <strong>Visual Genome (VG)</strong>, whose dense
-    object, attribute, relationship, and region annotations are converted into GT scene graphs; and 500 images from
-    <strong>Synthetic Visual Genome (SVG)</strong> (100 VG, 200 ADE-20K, 200 COCO) to assess cross-domain
-    generalization.</li>
-    <li><strong>Evaluatees.</strong> Open-source: LLaVA-1.5-7B (and its OPERA-decoding variant, designed to mitigate
-    hallucinations), InternVL2-8B, InternVL2.5-8B, InternVL3-8B-Instruct, Qwen2.5-VL-7B-Instruct, Qwen3-VL-8B-Instruct,
-    Gemma-3-12B-it. Proprietary: GPT-4o and GPT-5.4 mini.</li>
-    <li><strong>Baseline examiners.</strong> (i) the caption-based examiner (&ldquo;brief description&rdquo;),
-    (ii) the binary-question examiner (POPE), and (iii) our <em>prompt-only</em> baseline, which follows pre-defined
-    conversations as in-context examples to elicit hallucinations via contextualized, multi-turn interactions.</li>
-    <li><strong>Graders.</strong> CHAIR<sub>S</sub>/CHAIR<sub>I</sub> and object coverage; MMHal (GPT-4-based, 0&ndash;6
-    severity); HaELM (LLaMA-based detector); VALOR faith<sub>i</sub> and cov<sub>i</sub>; and our SG-based GED and
-    SG&nbsp;&Delta;Con.</li>
-    <li><strong>Human annotation.</strong> Crowdsourced annotators mark phrase-level hallucinations (object existence and
-    counts, attributes, relationships, scene text), aggregated into sample- and sentence-level scores.</li>
-  </ul>
-  <p>We organize experiments around three research questions: <strong>RQ1</strong> Do contextualized, multi-turn, and
-  dynamic interactions reveal more VLM hallucinations than conventional static evaluation? <strong>RQ2</strong> Does
-  the SG-based CEDI grader provide a more consistent and human-aligned assessment? <strong>RQ3</strong> What behavioral
-  insights does CEDI offer for evaluating the hallucinations of VLMs?</p>
-</section>
-
 <section id="rq1">
   <h2><span class="rq">RQ1 &middot; Effectiveness of the examiner</span>CEDI elicits more hallucinations than static examiners</h2>
   <p>Across all graders, the CEDI examiner consistently elicits more hallucinations on the SVG dataset than the
@@ -521,22 +466,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   examiners across six models on SVG. Radii are normalized as score/100 for percentage metrics, GED/150,
   SG&nbsp;&Delta;Con/5, and (100&minus;VALOR faith<sub>i</sub>)/50.</p>
 
-  <h3>Against single-turn yes/no probing</h3>
-  <p>For a fair comparison with POPE, Qwen3-30B-A3B-Instruct-2507 parses each evaluatee's CEDI transcript into yes/no
-  questions, keeping only those whose ground truth is available in annotations; the evaluatee then answers these
-  parsed questions, and we compare that accuracy with CEDI's implicit prediction in the transcript. The same facts,
-  asked in conversation, are answered <em>less</em> accurately.</p>
-  <div class="scroller" style="max-width:460px">
-  <table style="min-width:0">
-    <caption>VLM accuracy (%, lower = more hallucination exposed) under CEDI and POPE.</caption>
-    <thead><tr><th>Model</th><th>POPE</th><th>CEDI</th></tr></thead>
-    <tbody>
-      <tr><td>InternVL3-8B</td><td>61.65</td><td class="best">58.49</td></tr>
-      <tr><td>Qwen2.5-7B</td><td>66.90</td><td class="best">58.36</td></tr>
-      <tr><td>GPT-4o</td><td>67.89</td><td class="best">67.38</td></tr>
-    </tbody>
-  </table>
-  </div>
   <p>Together, these results show that <strong>static benchmarks miss a non-trivial slice of hallucination behavior
   that surfaces only in contextualized, dynamic, interactive use.</strong></p>
 
