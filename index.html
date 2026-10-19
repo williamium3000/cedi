@@ -78,8 +78,8 @@ strong{color:var(--ink);font-weight:600}
 ul.tight{margin:0 0 15px;padding-left:20px}
 ul.tight li{margin:0 0 8px}
 
-/* ---------- breakout width for wide figures ---------- */
-.wide{width:min(1320px,calc(100vw - 32px));position:relative;left:50%;transform:translateX(-50%)}
+/* ---------- figure blocks (same width as the text column) ---------- */
+.wide{position:relative}
 
 /* ---------- video ---------- */
 .video{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;
@@ -135,12 +135,6 @@ figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
 .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:start}
 .figrow figure{margin:12px 0}
 .zoomable{cursor:zoom-in}
-
-/* ---------- highlight cards ---------- */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin:22px 0}
-.card{border:1px solid var(--line);border-radius:12px;padding:16px 17px;background:var(--soft)}
-.card .big{font-family:var(--serif);font-size:28px;color:var(--accent);line-height:1.1;font-weight:600}
-.card .lbl{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.5}
 
 /* ---------- interactive workflow with ablation bubbles ---------- */
 .hint{display:flex;align-items:center;gap:12px;font-size:17px;line-height:1.5;color:var(--muted);margin:0 0 14px}
@@ -212,20 +206,6 @@ figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
 .qrow .note{color:var(--muted);font-size:12.5px}
 @media (max-width:560px){.qrow{grid-template-columns:1fr}.qrow img{width:100%;height:auto;max-height:200px}}
 
-/* ---------- details / appendix ---------- */
-details{border:1px solid var(--line);border-radius:10px;margin:12px 0;background:var(--soft)}
-details summary{cursor:pointer;padding:12px 16px;font-weight:600;color:var(--ink);font-size:15.5px;list-style:none}
-details summary::-webkit-details-marker{display:none}
-details summary::before{content:"\25B8";display:inline-block;margin-right:9px;color:var(--muted);transition:transform .15s}
-details[open] summary::before{transform:rotate(90deg)}
-details .inner{padding:2px 18px 14px;font-size:15px}
-details .inner .scroller{background:var(--bg)}
-.guide{border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:10px;padding:12px 16px;margin:10px 0 16px;background:var(--bg);font-size:14.5px}
-.guide .gt{font-weight:650;color:var(--accent);margin-bottom:6px}
-.guide ol{margin:4px 0 8px;padding-left:20px}
-.qtag,.htag{display:inline-block;color:#fff;font-weight:700;font-size:12px;border-radius:3px;padding:0 5px}
-.qtag{background:#1565c0}.htag{background:#c62828}
-
 /* ---------- lightbox ---------- */
 #lb{position:fixed;inset:0;background:rgba(10,14,20,.82);z-index:100;display:none;place-items:center;padding:24px;cursor:zoom-out}
 #lb.show{display:grid}
@@ -271,8 +251,7 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   <div class="wrap">
     <span class="venue">NeurIPS 2026 &middot; Evaluations &amp; Datasets Track</span>
     <h1>Contextualized Evaluation of Vision Language Models through Dynamic, Multi-turn Interactions</h1>
-    <p class="sub">Evaluate VLMs the way people use them. <strong>CEDI</strong> &mdash; <strong>C</strong>ontextualized
-    <strong>E</strong>valuations of MLLMs through <strong>D</strong>ynamic, multi-round <strong>I</strong>nteractions.</p>
+    <p class="sub">Evaluate VLMs the way people use them.</p>
 
     <p class="authors">
       Yijiang Li<sup>1&dagger;</sup> &nbsp;
@@ -329,13 +308,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   <strong>premise rejection or refusal</strong>. Together, these findings highlight CEDI as a step toward realistic,
   systematic, and ecologically valid assessments of MLLMs' capabilities.</p>
 
-  <div class="cards">
-    <div class="card"><div class="big">+3&ndash;19 pp</div><div class="lbl">object Coverage over caption and prompt-only examiners, on every evaluatee (SVG)</div></div>
-    <div class="card"><div class="big">+5&ndash;23 pp</div><div class="lbl">VALOR per-turn hallucination rate elicited</div></div>
-    <div class="card"><div class="big">1.2&ndash;2.9&times;</div><div class="lbl">higher scene-graph Graph Edit Distance (GED)</div></div>
-    <div class="card"><div class="big">+8&ndash;18 pp</div><div class="lbl">CHAIR<sub>I</sub> over the caption baseline</div></div>
-    <div class="card"><div class="big">&rho; = 0.22&ndash;0.33</div><div class="lbl">GED<sub>hal</sub> vs. human hallucination counts, consistent on all four annotated evaluatees</div></div>
-  </div>
 </section>
 
 <section id="motivation">
@@ -525,7 +497,7 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
     conversations as in-context examples to elicit hallucinations via contextualized, multi-turn interactions.</li>
     <li><strong>Graders.</strong> CHAIR<sub>S</sub>/CHAIR<sub>I</sub> and object coverage; MMHal (GPT-4-based, 0&ndash;6
     severity); HaELM (LLaMA-based detector); VALOR faith<sub>i</sub> and cov<sub>i</sub>; and our SG-based GED and
-    SG&nbsp;&Delta;Con. Full definitions are in the <a href="#details">details</a> below.</li>
+    SG&nbsp;&Delta;Con.</li>
     <li><strong>Human annotation.</strong> Crowdsourced annotators mark phrase-level hallucinations (object existence and
     counts, attributes, relationships, scene text), aggregated into sample- and sentence-level scores.</li>
   </ul>
@@ -746,156 +718,6 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
       </div>
     </div>
   </div>
-</section>
-
-<section id="conclusion">
-  <h2>Conclusion</h2>
-  <p>We introduced CEDI, a contextualized evaluation framework that recasts VLM assessment as a three-party interaction
-  among an evaluatee, a dynamic examiner, and a grader. Guided by scene graphs, the examiner conducts context-driven,
-  multi-turn interaction using regular, follow-up, adversarial, and unanswerable questions, while the SG-based grader
-  evaluates hallucinations beyond object-level errors by capturing incorrect objects, attributes, and relations,
-  together with coverage. Across multiple models, datasets, automatic metrics, and human annotations, CEDI consistently
-  exposes more hallucinations, achieves broader visual coverage, and produces interactions and failures that are more
-  relevant to realistic user contexts than captioning, binary-question, and prompt-only baselines. Our analyses further
-  show that contextualization, conversational history, and multi-round interaction are central to this effect:
-  hallucinations often accumulate through self-reinforcing dialogue history, and models are particularly vulnerable to
-  questions requiring premise rejection or refusal. Although the current instantiation focuses on visual
-  hallucination, we argue that the underlying formulation and evaluation framework are general and can be extended to
-  broader tasks and applications. We hope CEDI motivates a broader shift from static benchmark testing toward
-  adaptive, context-dependent evaluation of multimodal systems under realistic interaction.</p>
-
-  <h3>Limitations</h3>
-  <ul class="tight">
-    <li><strong>Dependence on ground-truth scene graphs.</strong> To ground the examiner in faithful visual content and
-    enable structured scoring, we primarily use annotated scene graphs, preventing the examiner from relying on
-    language priors alone. To reduce this dependency, we validate CEDI on SVG, whose scene graphs are automatically
-    constructed from diverse sources rather than hand-labeled.</li>
-    <li><strong>Examiner backbone accessibility.</strong> We use GPT-4o as the default examiner backbone for its strong
-    instruction-following and context-modeling capabilities. Both the examiner and the grader are instantiated with
-    LLM/MLLM components, so their quality is bounded by the underlying backbone models.</li>
-    <li><strong>Transcript-level grading.</strong> The SG-based grader assesses the accumulated, transcript-level
-    response; it is ill-suited (or prohibitively costly) for grading individual turns, for which we rely on per-turn
-    signals such as VALOR.</li>
-  </ul>
-</section>
-
-<section id="details">
-  <h2>More details</h2>
-
-  <details>
-    <summary>Related work</summary>
-    <div class="inner">
-      <p><strong>Static evaluation.</strong> Static benchmarks remain the dominant paradigm for MLLM evaluation, spanning
-      VQA, image captioning, OCR/text understanding, and more recently core cognitive abilities and higher-level
-      reasoning such as MathVerse and ScienceQA. GQA, OK-VQA, OwlEval, MMBench, and MMMU evaluate visual perception and
-      reasoning through large collections of question&ndash;answer pairs; SEED-Bench and SEED-Bench-2-Plus extend
-      evaluation to video and text modalities. Despite their breadth, static benchmarks increasingly suffer from
-      performance saturation and data contamination, and more fundamentally ignore the dynamic, interactive, and
-      contextualized nature of real-world MLLM use.</p>
-      <p><strong>Dynamic evaluation.</strong> Recent studies evaluate MLLMs in interactive, conversational settings.
-      MMDU targets multi-turn dialogues over multiple images; ConvBench organizes interaction sequences to
-      progressively probe perception, reasoning, and creativity; MMRC assesses open-ended conversational capabilities.
-      These efforts remain constrained by static rubrics and largely pre-scripted conversation structures, and offer
-      limited mechanisms for explicit context modeling.</p>
-      <p><strong>Visual hallucination and its evaluation.</strong> VLMs may generate plausible but non-existent
-      objects, attributes, or relations, often driven by spurious co-occurrence patterns learned during training rather
-      than visual evidence &mdash; undermining reliability in critical applications such as autonomous driving.
-      Evaluation spans frameworks, benchmarks, grading methods, and datasets for training hallucination detectors, but
-      most approaches are single-turn (e.g., caption-based) and rely on coarse binary labels (e.g., yes/no object
-      presence), poorly reflecting multi-turn, context-dependent interactions and rarely differentiating hallucination
-      severity under varying contexts.</p>
-    </div>
-  </details>
-
-  <details>
-    <summary>Baseline grader definitions</summary>
-    <div class="inner">
-      <p>\(\mathcal{O}_{\text{gen}}\) = objects mentioned by the model, \(\mathcal{O}_{\text{gt}}\) = GT objects,
-      \(\mathcal{S}\) = generated sentences. Aggregations are per-image means unless stated otherwise.</p>
-      <div class="scroller">
-      <table class="wrap" style="min-width:640px">
-        <thead><tr><th>Metric</th><th>Formula</th><th>What it measures</th><th>Dir.</th></tr></thead>
-        <tbody>
-          <tr><td>CHAIR<sub>S</sub></td><td>\(\frac{|\{s\in\mathcal{S}:\exists o\in s,\,o\notin\mathcal{O}_{\text{gt}}\}|}{|\mathcal{S}|}\)</td><td>Sentence-level object-hallucination rate.</td><td>&uarr;</td></tr>
-          <tr><td>CHAIR<sub>I</sub></td><td>\(\frac{|\mathcal{O}_{\text{gen}}\setminus\mathcal{O}_{\text{gt}}|}{|\mathcal{O}_{\text{gen}}|}\)</td><td>Fraction of mentioned objects that are hallucinated.</td><td>&uarr;</td></tr>
-          <tr><td>CHAIR n<sub>hall</sub></td><td>\(|\mathcal{O}_{\text{gen}}\setminus\mathcal{O}_{\text{gt}}|\)</td><td>Raw per-image hallucinated-object count.</td><td>&uarr;</td></tr>
-          <tr><td>Cov.</td><td>\(\frac{|\mathcal{O}_{\text{gen}}\cap\mathcal{O}_{\text{gt}}|}{|\mathcal{O}_{\text{gt}}|}\)</td><td>Portion of GT objects mentioned; probing-breadth signal.</td><td>&uarr;</td></tr>
-          <tr><td>MMHal</td><td>\(100-\bar{r}/6\times 100,\ r\in[0,6]\)</td><td>LLM rubric grader converted to a hallucination rate.</td><td>&uarr;</td></tr>
-          <tr><td>HaELM</td><td>share of responses judged hallucinated, avg. of 3 runs</td><td>LLM judge of hallucination &amp; informativeness.</td><td>&uarr;</td></tr>
-          <tr><td>VALOR faith<sub>i</sub></td><td>\(\frac{|\mathcal{O}_{\text{gen}}\cap\mathcal{O}_{\text{gt}}|}{|\mathcal{O}_{\text{gen}}|}\)</td><td>Mentioned objects grounded in GT (faithfulness).</td><td>&darr;</td></tr>
-          <tr><td>VALOR cov<sub>i</sub></td><td>\(\frac{|\mathcal{O}_{\text{gen}}\cap\mathcal{O}_{\text{gt}}|}{|\mathcal{O}_{\text{gt}}|}\)</td><td>Per-image object-existence coverage.</td><td>&uarr;</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-  </details>
-
-  <details>
-    <summary>Contextualized Caption and POPE baselines (relevance study)</summary>
-    <div class="inner">
-      <p><strong>Caption.</strong> The scenario is prepended as a plain instruction: <em>&ldquo;Considering this
-      context: {context}, please provide a detailed description.&rdquo;</em>, where {context} is the same
-      background + goal string CEDI receives.</p>
-      <p><strong>POPE.</strong> The yes/no pool is regenerated per image from the scenario and scene graph, with the
-      number of questions matched to the number of CEDI rounds on that image:</p>
-      <ol>
-        <li><strong>Candidate pool.</strong> Given {background, goal}, Qwen3-30B-A3B-Instruct-2507 lists \(N=50\)
-        concrete visible objects that could appear in the scenario, mixing plausible-present and plausible-absent.</li>
-        <li><strong>Existence + co-occurrence check.</strong> Given the GT object list and the candidates, the LLM labels
-        each <code>yes</code>/<code>no</code> using synonym and parent-class matching, and flags which
-        <code>no</code>-candidates are frequent real-world co-occurrences (plausible distractors).</li>
-        <li><strong>Composition.</strong> Draw \(n_{\text{rounds}}\) questions in the ratio \(\tfrac12\) yes :
-        \(\tfrac14\) random no : \(\tfrac14\) co-occurrence no, formatted as &ldquo;is there a &lang;object&rang; in
-        the image?&rdquo;</li>
-      </ol>
-    </div>
-  </details>
-
-  <details>
-    <summary>Human annotation guidelines</summary>
-    <div class="inner">
-      <div class="guide">
-        <div class="gt">Hallucination annotation</div>
-        Your task is to assess whether the content in the conversation conflicts with the image. Identify the segment
-        (or sub-sentence) that is wrong / conflicting / irrelevant regarding the image, given several captions and
-        objects with locations. Pay attention to:
-        <ol>
-          <li><strong>Object</strong>: whether objects exist and whether their quantity conflicts with the object information.</li>
-          <li><strong>Attributes</strong>: whether color, position, or action conflicts with the attribute information.</li>
-          <li><strong>Relations</strong>: whether the relation between objects and their interaction is correct.</li>
-          <li><strong>Scene Text</strong>: whether text mentioned in the conversation matches the text in the image.</li>
-        </ol>
-      </div>
-      <div class="guide">
-        <div class="gt">Conversation realism ranking</div>
-        Read three conversations between a person and an AI about the same image. Rank them by how well they reflect
-        the way real people actually use AI assistants &mdash; not whether the language sounds natural, but whether this
-        is the kind of exchange someone would genuinely have with an AI. <strong>1</strong> Most realistic: exactly the
-        kinds of questions someone would type in everyday use. <strong>2</strong> Moderately realistic.
-        <strong>3</strong> Least realistic: feels like a benchmark test or academic exercise. Use each rank exactly
-        once; ignore whether the AI's answers are correct.
-      </div>
-      <div class="guide">
-        <div class="gt">Conversation relevance</div>
-        Given the background and goal, tick each question <span class="qtag">Q#</span> and each highlighted answer
-        snippet <span class="htag">H#</span> that is related to the task's goal. <em>Rule of thumb:</em> an item is
-        related to the goal if a person trying to accomplish the goal would care whether it is correct.
-      </div>
-    </div>
-  </details>
-
-  <details>
-    <summary>Ethics statement</summary>
-    <div class="inner">
-      <p>This work aims to advance the evaluation of VLMs through a contextualized and interactive framework for
-      diagnosing hallucinations, with potential positive impact on real-world deployments such as assistive tools,
-      where fabricated visual information may lead to user confusion or safety risks. Any automated evaluator can itself
-      be imperfect and should not be the sole basis for deployment decisions. All images come from publicly available
-      datasets (VG, COCO, ADE20K, and the SVG collection) under their respective licenses, and no personally
-      identifiable information was collected. Crowdsourced annotators were compensated for their time; all
-      model-generated content was reviewed for sensitive or harmful material before being shown to annotators.</p>
-    </div>
-  </details>
 </section>
 
 <section id="bibtex">
