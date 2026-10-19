@@ -102,8 +102,6 @@ ul.tight li{margin:0 0 8px}
 .qt b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
 .qt .tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:999px;
          background:var(--step);color:var(--step-ink);margin-bottom:6px}
-.example{border-left:3px solid var(--hot);background:var(--soft);padding:12px 16px;border-radius:0 10px 10px 0;
-         font-size:15px;margin:0 0 18px}
 
 /* ---------- tables ---------- */
 .scroller{overflow-x:auto;margin:20px auto;border:1px solid var(--line);border-radius:10px}
@@ -114,14 +112,9 @@ thead th{background:var(--soft);color:var(--ink);font-weight:600;font-size:13.5p
          border-bottom:1px solid var(--line)}
 tbody tr{border-bottom:1px solid var(--line)}
 tbody tr:last-child{border-bottom:none}
-tr.group td{background:var(--soft);color:var(--muted);font-size:12.5px;font-weight:600;
-            letter-spacing:.05em;text-transform:uppercase;padding:7px 12px}
-tr.ours{background:color-mix(in srgb,var(--accent) 8%,transparent)}
-tr.ours td{color:var(--ink);font-weight:650}
 td.best{color:var(--accent);font-weight:650}
 td.neg{color:#c0392b} td.pos{color:#2e7d32}
 :root[data-theme="dark"] td.neg{color:#ef8a7e} :root[data-theme="dark"] td.pos{color:#8fd19e}
-.pad{padding-left:26px !important}
 caption{caption-side:bottom;text-align:left;color:var(--muted);font-size:13.5px;
         padding:11px 12px;line-height:1.55;white-space:normal}
 table.wrap td,table.wrap th{white-space:normal;text-align:left;vertical-align:top}
@@ -317,11 +310,8 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
 
 <section id="method">
   <h2>How CEDI works</h2>
-  <p>CEDI recasts evaluation as a three-party interaction among an evaluatee model, an examiner, and a grader. The
-  examiner elicits capability evidence through multi-turn interaction with the evaluatee, while the grader scores the
-  model responses, flags potential hallucinations, and produces a final performance score. Building upon this framing,
-  CEDI develops a <strong>contextualized, interactive examiner</strong> and a <strong>scene graph (SG)-based
-  grader</strong>.</p>
+  <p>CEDI recasts evaluation as a three-party interaction: a <strong>contextualized, interactive examiner</strong>
+  converses with the evaluatee model, and a <strong>scene graph (SG)-based grader</strong> scores the transcript.</p>
 
   <p class="hint"><span class="dots"><span class="dot">1</span><span class="dot g">7</span></span> <span>Every orange (examiner) or blue (grader) bubble marks a component we
   ablated or validated &mdash; hover, tap, or tab to it to see what happens without it.</span></p>
@@ -335,127 +325,63 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   interactive examiner (top) and scene graph (SG)-based grader (bottom).</p>
 
   <h3>The examiner: a semi-structured interview over a scene graph</h3>
-  <p>Drawing inspiration from interactive human assessment, we move beyond static, paper-based tests and adopt a
-  semi-structured evaluative interview in which the examiner adapts question type and difficulty based on the model's
-  responses. Given ground-truth (GT) visual annotations (and optionally the image), the evaluator models real-world
-  context and conducts a multi-turn interview, dynamically adjusting its questioning strategy according to the model's
-  prior answers.</p>
-
   <div class="flow">
     <div class="step">
       <div class="num">1</div>
       <div>
         <h4>Represent the image as a scene graph</h4>
-        <p>For an image \(I\), the examiner stores visual content as a scene graph \(G = (V, E, \mathcal{A})\), where
-        \(V=\{v_1,\dots,v_{|V|}\}\) are object instances, \(E \subseteq V \times \mathcal{R} \times V\) are directed,
-        typed relation edges, and \(\mathcal{A}\) is an attribute mapping. Each node \(v\) has a category
-        \(c(v)\in\mathcal{C}\) and attribute&ndash;value pairs
-        \(\mathcal{A}(v) = \{(a_k, x_k)\}_{k=1}^{m_v}\), with \(a_k \in \mathcal{K}\) (e.g., color, size) and
-        \(x_k \in \mathcal{X}_{a_k}\). Each edge \((v_i, r, v_j)\) represents a predicate \(r(v_i, v_j)\)
-        (e.g., <em>on</em>, <em>holding</em>, <em>next to</em>).</p>
-        <p>This yields a manipulable state space for both examiner and grader: questions are grounded in faithful
-        visual content rather than driven solely by language priors.</p>
+        <p>Objects, attributes and relations from ground-truth annotations, so every question stays verifiable against
+        the image rather than driven by language priors.</p>
       </div>
     </div>
     <div class="step">
       <div class="num">2</div>
       <div>
         <h4>Model a user's context</h4>
-        <p>Users interact with MLLMs from a first-person scenario that combines context with an explicit objective
-        (&ldquo;I am visually impaired and want to locate the restroom in this restaurant,&rdquo; or &ldquo;I am driving
-        in a park and need to find a parking lot.&rdquo;). The examiner treats \(I\) as the user's immediate environment
-        and constructs a scenario \(s\) with goal \(g\) <em>grounded in</em> \(G\); the goal requires reasoning over
-        multiple elements rather than single-object recognition.</p>
-        <p>In parallel, it selects a context-relevant node subset \(V_s \subseteq V\), forming a sub-graph
-        \(G_s = (V_s, E_s, \mathcal{A}_s)\) with \(E_s = \{(v_i, r, v_j) \in E : v_i, v_j \in V_s\}\) and
-        \(\mathcal{A}_s = \mathcal{A}|_{V_s}\).</p>
+        <p>A first-person scenario with a goal grounded in the graph (&ldquo;I am visually impaired and want to locate
+        the restroom in this restaurant&rdquo;), plus the sub-graph of objects that matter for it.</p>
       </div>
     </div>
     <div class="step">
       <div class="num">3</div>
       <div>
         <h4>Converse by traversing the sub-graph</h4>
-        <p>At turn \(t\), the examiner randomly selects a target node \(v_t \in V_s\) (or retains \(v_{t-1}\) for a
-        follow-up) and generates a question grounded in \(v_t\) and its local structure. Three properties matter:
-        (i) <em>grounded traversal</em> &mdash; every turn is anchored to a concrete node, so questions stay verifiable
-        against \(G\); (ii) <em>goal-driven interaction</em> &mdash; \(s\) and \(g\) persist across turns, making the
-        dialogue purposeful rather than a sequence of independent queries; (iii) <em>contextual continuity, follow-up
-        consistency, and conversational dependency</em> &mdash; conditioning every turn on the prior conversation
-        stress-tests whether later answers stay consistent with earlier claims.</p>
+        <p>Each turn targets one node and conditions on the whole dialogue so far, testing whether later answers stay
+        consistent with earlier claims.</p>
       </div>
     </div>
   </div>
 
   <h3>Four question types</h3>
-  <p>From this scaffold, the examiner actively selects one of four question types to elicit different hallucination
-  behaviors &mdash; adversarial questions are only one component of this repertoire. Type selection is conditioned on
-  the conversation history and previously used types to avoid repetitive questions and support a coherent dialogue
-  flow.</p>
   <div class="qtypes">
-    <div class="qt"><span class="tag">regular</span><b>Establish a factual baseline</b>Grounded in \(v_t\) and the goal
-    \(g\), querying observable objects, attributes, or relations in \(G_s\) under realistic user objectives.</div>
-    <div class="qt"><span class="tag">follow-up</span><b>Test consistency</b>Conditions on the dialogue history and the
-    model's prior claims to confirm, clarify, or interrogate earlier responses, keeping \(v_t = v_{t-1}\).</div>
-    <div class="qt"><span class="tag">adversarial</span><b>Exploit co-occurrence priors</b>Asks about a highly plausible
-    but absent object \(v \notin V_s\), attribute \((a,x) \notin \mathcal{A}_s(v_t)\), or relation
-    \((v_i,r,v_j)\notin E_s\) that commonly co-occurs with the visual content.</div>
-    <div class="qt"><span class="tag">unanswerable</span><b>Inject a false premise</b>Fabricates an unsupported element
-    \(p\), then composes a dependent query \(q(p)\) whose answer is undefined:
-    \(G \not\models p \Rightarrow G \not\models q(p)\).</div>
-  </div>
-  <div class="example">
-    <strong>Example.</strong> Given a scene graph encoding a cake on a table and a fork nearby, the examiner may
-    fabricate a node \(v_{\text{man}}\notin V_s\) and a relation \((v_{\text{man}},\texttt{holding},v_{\text{fork}})\notin E_s\),
-    then ask: &ldquo;<em>What is the man using to eat the cake?</em>&rdquo; A well-grounded model should refuse or correct
-    the premise (&ldquo;There is no man in the image&rdquo;), while hallucinating models tend to fabricate
-    (&ldquo;the man is holding the fork to eat the cake&rdquo;).
+    <div class="qt"><span class="tag">regular</span><b>Establish a factual baseline</b>Asks about objects, attributes
+    or relations that are really there, in service of the user's goal.</div>
+    <div class="qt"><span class="tag">follow-up</span><b>Test consistency</b>Revisits the model's earlier claims to
+    confirm, clarify or challenge them.</div>
+    <div class="qt"><span class="tag">adversarial</span><b>Exploit co-occurrence priors</b>Asks about a plausible but
+    absent object, attribute or relation.</div>
+    <div class="qt"><span class="tag">unanswerable</span><b>Inject a false premise</b>Builds a question on something
+    that isn't in the image; a grounded model should refuse.</div>
   </div>
 
   <figure class="wide">
     <img class="zoomable" src="static/images/traversal.png" alt="Left: the examiner starts with a regular question, then at each turn a Switch? node picks among regular, follow-up, adversarial and unanswerable before ending. Middle: an adversarial question asks about a non-existent walk sign controlling the crosswalk. Right: an unanswerable question presupposes the walk sign and asks what colour it is.">
-    <figcaption>Multi-turn conversation as a traversal over \(G_s\), with one of four question types selected per turn.
-    This form of examiner evaluates not only descriptive accuracy, but also robustness under confirmation pressure,
-    ambiguity, misleading premises, and adversarial distractors &mdash; failure modes that static, single-turn protocols
-    often miss.</figcaption>
+    <figcaption>A conversation is a traversal of the sub-graph, with one of the four question types chosen at each
+    turn.</figcaption>
   </figure>
 
-  <p><strong>Examiner backbone.</strong> The examiner is empowered by an MLLM such as GPT-4o. We prompt it to generate
-  the scenario and objectives, actively select the question type for each turn, and generate diverse yet contextually
-  and visually grounded questions.</p>
-  <p><strong>Scaling contexts for coverage.</strong> Beyond precision, <em>recall</em> (coverage of image content) is
-  critical: otherwise a model can minimize risk by producing overly sparse descriptions, remaining correct simply by
-  saying little. Enforcing exhaustive coverage is misaligned with a brief caption and incompatible with single-turn VQA.
-  We argue that <strong>coverage should be driven by the examiner, not imposed by the grader</strong>: the examiner
-  generates diverse, goal-driven contexts, each selecting a different sub-graph \(G_s\). As the number of sampled
-  contexts grows, the union of queried sub-graphs expands, yielding higher coverage while preserving naturalistic
-  interaction.</p>
 
   <h3>The grader: compare scene graphs, not strings</h3>
-  <p>The grader parses the MLLM's transcript into a predicted scene graph and compares it against the ground-truth one.
-  Discrepancies correspond to either <strong>hallucinated</strong> (less faithful) or <strong>missing</strong> (less
-  covered) objects, attributes, and relations.</p>
-  <p>Let the GT scene graph be \(G^{\star}=(V^{\star},E^{\star},\mathcal{A}^{\star})\) and the transcript over \(T\)
-  turns be \(\mathcal{T}=\{y_t\}_{t=1}^{T}\). An LLM-based parser extracts semantic tuples at the sentence level and
-  aggregates them into a predicted graph \(\hat{G}=(\hat{V},\hat{E},\hat{\mathcal{A}})\); candidate entities are
-  restricted to WordNet physical-entity classes to filter non-physical nouns.</p>
-  <p><strong>Graph Edit Distance (GED)</strong> computes the minimum total cost of edit operations that transform one
-  graph into another:</p>
-  $$\mathrm{GED}(\hat{G},G^{\star})= \min_{\pi \in \Pi(\hat{G},G^{\star})} \sum_{e \in \pi} c(e)$$
-  <p><em>Insertions</em> penalize missing visual content (in \(G^{\star}\) but not \(\hat{G}\)), whereas
-  <em>deletions</em> penalize hallucinated entities or relations (in \(\hat{G}\) but not \(G^{\star}\)), so GED jointly
-  captures hallucination and coverage.</p>
-  <p><strong>SG&nbsp;&Delta;Con</strong> compares node-affinity matrices computed with fast belief propagation, using the
-  Matusita distance between propagated influence patterns, plus a normalized symmetric difference on attributes:</p>
-  $$d_{\Delta}(\hat{G},G^{\star})=\sqrt{\sum_{i,j}\Big(\sqrt{S_{\hat{G},ij}}-\sqrt{S_{G^{\star},ij}}\Big)^2},\qquad
-  d_{\mathcal{A}}=\frac{|\hat{\mathcal{A}}\,\triangle\,\mathcal{A}^{\star}|}{|\hat{\mathcal{A}}\cup\mathcal{A}^{\star}|},\qquad
-  d=d_{\Delta}+\lambda d_{\mathcal{A}}$$
+  <p>An LLM parser turns the transcript into a predicted scene graph, which is compared with the ground truth using
+  <strong>Graph Edit Distance (GED)</strong> and <strong>SG&nbsp;&Delta;Con</strong>. Extra content counts as
+  hallucination, missing content as lost coverage, so one score captures both.</p>
 </section>
 
 <section id="rq1">
   <h2><span class="rq">RQ1 &middot; Effectiveness of the examiner</span>CEDI elicits more hallucinations than static examiners</h2>
-  <p>Across all graders, the CEDI examiner consistently elicits more hallucinations on the SVG dataset than the
-  caption-based and prompt-only examiners. Every axis below is oriented so that a <strong>larger radius means more
-  severe hallucination</strong> exposed. Hover a point for exact values.</p>
+  <p>Across all graders and six models, CEDI elicits more hallucinations than caption-based and prompt-only
+  examiners. A <strong>larger radius means more severe hallucination</strong> exposed; hover a point for exact
+  values.</p>
   <div class="legend">
     <span><i style="background:var(--cap)"></i>Caption</span>
     <span><i style="background:var(--prm)"></i>Prompt-only</span>
@@ -466,42 +392,12 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   examiners across six models on SVG. Radii are normalized as score/100 for percentage metrics, GED/150,
   SG&nbsp;&Delta;Con/5, and (100&minus;VALOR faith<sub>i</sub>)/50.</p>
 
-  <p>Together, these results show that <strong>static benchmarks miss a non-trivial slice of hallucination behavior
-  that surfaces only in contextualized, dynamic, interactive use.</strong></p>
+  <p>Human annotators agree: CEDI is the highest-scoring examiner on all six human-annotated hallucination statistics,
+  for every evaluatee.</p>
 
-  <h3>Humans agree: more hallucinations, on every statistic</h3>
-  <p>Across all six human-annotated statistics, CEDI is the highest-scoring examiner on every evaluatee.</p>
-  <div class="scroller">
-  <table>
-    <caption>Human-annotated hallucination results (&uarr; = more hallucination exposed). #/Samp. and #/Sent.: average
-    hallucination count per sample/sentence. Hall./1000c: hallucinations per 1,000 characters. Char-span: fraction of
-    characters in hallucination.</caption>
-    <thead><tr><th>Examiner</th><th>Samp. Hall.</th><th>Sent. Hall.</th><th>#/Samp.</th><th>#/Sent.</th><th>Hall./1000c</th><th>Char-span</th></tr></thead>
-    <tbody>
-      <tr class="group"><td colspan="7">InternVL3-8B Instruct</td></tr>
-      <tr><td class="pad">Caption</td><td>80.0%</td><td>15.0%</td><td>1.44</td><td>0.23</td><td>2.23</td><td>0.07</td></tr>
-      <tr><td class="pad">Prompt-only</td><td>70.0%</td><td>6.4%</td><td>2.20</td><td>0.09</td><td>0.69</td><td>0.02</td></tr>
-      <tr class="ours"><td class="pad">CEDI</td><td class="best">100.0%</td><td class="best">26.6%</td><td class="best">6.78</td><td class="best">0.28</td><td class="best">2.72</td><td class="best">0.15</td></tr>
-      <tr class="group"><td colspan="7">LLaVA-1.5-7B</td></tr>
-      <tr><td class="pad">Caption</td><td>81.0%</td><td>18.3%</td><td>1.60</td><td>0.28</td><td>2.80</td><td>0.22</td></tr>
-      <tr><td class="pad">Prompt-only</td><td>92.0%</td><td>16.6%</td><td>7.44</td><td>0.24</td><td>1.81</td><td>0.06</td></tr>
-      <tr class="ours"><td class="pad">CEDI</td><td class="best">100.0%</td><td class="best">38.3%</td><td class="best">9.60</td><td class="best">0.43</td><td class="best">4.82</td><td class="best">0.24</td></tr>
-      <tr class="group"><td colspan="7">Opera-LLaVA-1.5</td></tr>
-      <tr><td class="pad">Caption</td><td>98.0%</td><td>44.7%</td><td>2.48</td><td>0.45</td><td>4.61</td><td>0.19</td></tr>
-      <tr><td class="pad">Prompt-only</td><td class="best">100.0%</td><td>40.6%</td><td>7.92</td><td>0.42</td><td>4.60</td><td>0.31</td></tr>
-      <tr class="ours"><td class="pad">CEDI</td><td class="best">100.0%</td><td class="best">48.9%</td><td class="best">8.52</td><td class="best">0.51</td><td class="best">5.86</td><td class="best">0.45</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <h3>&hellip;and the conversations look like real use</h3>
-  <p>For <strong>realism</strong>, annotators rank complete conversations on 50 sampled images by how closely they
-  resemble natural VLM usage. CEDI is consistently preferred over Caption and POPE, with a statistically significant
-  improvement over POPE (\(p=.011\)). For <strong>relevance</strong>, annotators judge 100 question&ndash;answer pairs:
-  is each generated question, or each elicited hallucination, directly relevant to the user's stated objective? For a
-  fair comparison, Caption is re-run with the same context description as CEDI and POPE questions are regenerated from
-  the GT annotation and the context. CEDI achieves higher relevance for both, while the baselines more often surface
-  errors involving objects or relations peripheral to the context.</p>
+  <h3>The conversations look like real use</h3>
+  <p>Annotators rank CEDI's conversations as the most realistic, and find its questions and the hallucinations it
+  exposes more relevant to the user's goal than those of Caption and POPE.</p>
   <div class="figrow">
     <figure>
       <img class="zoomable" src="static/images/realism_ranking_figure.png" alt="Stacked bars of realism ranks: CEDI ranked first 46%, Caption 32%, POPE 22%; POPE ranked last 44%.">
@@ -514,20 +410,12 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
       relevance is not evaluated for Caption since all queries are almost the same.</figcaption>
     </figure>
   </div>
-  <p style="font-size:14.5px;color:var(--muted)">Ablations of the examiner's own components &mdash; context generation,
-  node selection, context scaling, multi-round interaction, question types, conversational history, and a multimodal
-  backbone &mdash; live on the <a href="#method">workflow figure above</a>, pinned to the part they remove.</p>
 </section>
 
 <section id="rq2">
   <h2><span class="rq">RQ2 &middot; Analysis of the grader</span>A scene-graph grader that tracks humans</h2>
-  <p>Human annotators flag hallucination (precision) but not coverage (recall), so overall GED is not directly
-  comparable to human judgments. To disentangle the two failure modes, we define two GED variants anchored on the
-  synset-aligned intersection \(G^{\cap}=\hat{G}\cap G^{\star}\):</p>
-  $$\mathrm{GED}_{\text{hal}}=\mathrm{GED}(G^{\cap},\hat{G}), \qquad \mathrm{GED}_{\text{cov}}=\mathrm{GED}(G^{\cap},\hat{G}\cup G^{\star})$$
-  <p>\(\mathrm{GED}_{\text{hal}}\) isolates prediction-only content (precision, aligned with human annotations);
-  \(\mathrm{GED}_{\text{cov}}\) captures both hallucinated and uncovered content. We compute the Pearson correlation
-  \(\rho\) between each grader score and the human-annotated hallucination count across 50 images per evaluatee.</p>
+  <p>We correlate each grader with human hallucination counts on 50 images per evaluatee, using
+  GED<sub>hal</sub>, the part of GED that counts hallucinated content.</p>
   <div class="scroller" style="max-width:620px">
   <table style="min-width:0">
     <caption>Pearson \(\rho\) between each grader and human hallucination counts. GED<sub>hal</sub> is the only grader
@@ -541,55 +429,16 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
     </tbody>
   </table>
   </div>
-  <p>Including both CHAIR variants disentangles two limitations. Replacing CHAIR<sub>I</sub> with the unnormalized
-  count raises LLaVA-1.5's correlation from \(\rho=0.05\) to \(0.32\): length normalization dilutes the signal for
-  verbose evaluatees. But for Opera and Qwen3-VL the raw count stays near zero or negative (\(-0.03\), \(-0.24\)) &mdash;
-  CHAIR fails when hallucinations concern relations or attributes outside its object-centric vocabulary. GED<sub>hal</sub>
-  provides the most consistent signal, \(\rho = 0.22\)&ndash;\(0.33\) in all cases, including Opera-LLaVA-1.5 where
-  both CHAIR variants collapse.</p>
-  <p style="font-size:14.5px;color:var(--muted)">Parser accuracy and run-to-run stability of the grader are on the
-  <a href="#method">blue bubbles of the workflow figure</a>.</p>
+  <p>CHAIR breaks down when hallucinations involve relations or attributes outside its object vocabulary, while
+  GED<sub>hal</sub> stays consistent (\(\rho = 0.22\)&ndash;\(0.33\)) on every evaluatee.</p>
 </section>
 
 <section id="rq3">
   <h2><span class="rq">RQ3 &middot; Evaluation results</span>What CEDI reveals about today's VLMs</h2>
-  <div class="scroller">
-  <table>
-    <caption>Visual hallucination results of VLMs using CEDI and the SG-based grader, by image source. &darr; = less
-    hallucination; &uarr; = broader coverage. Best per column in blue.</caption>
-    <thead>
-      <tr><th rowspan="2">Model</th><th colspan="3" style="text-align:center">COCO</th><th colspan="3" style="text-align:center">VG</th><th colspan="3" style="text-align:center">ADE20K</th></tr>
-      <tr><th>GED&darr;</th><th>&Delta;Con&darr;</th><th>Cov.&uarr;</th><th>GED&darr;</th><th>&Delta;Con&darr;</th><th>Cov.&uarr;</th><th>GED&darr;</th><th>&Delta;Con&darr;</th><th>Cov.&uarr;</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>LLaVA-1.5-7B</td><td>91.06</td><td>4.17</td><td>29.11</td><td>116.26</td><td>4.30</td><td>22.98</td><td>126.37</td><td>4.71</td><td>31.18</td></tr>
-      <tr><td>InternVL2-8B</td><td>69.03</td><td>4.05</td><td>24.06</td><td>85.09</td><td class="best">4.20</td><td>18.93</td><td>121.62</td><td>4.42</td><td>23.99</td></tr>
-      <tr><td>InternVL2.5-8B</td><td>78.59</td><td>4.12</td><td>23.28</td><td>92.62</td><td>4.26</td><td>21.12</td><td>108.31</td><td>4.47</td><td>24.47</td></tr>
-      <tr><td>Qwen2.5-VL-7B Instruct</td><td>130.76</td><td>4.44</td><td>35.50</td><td>151.64</td><td>4.56</td><td class="best">29.35</td><td>177.94</td><td>4.84</td><td class="best">36.04</td></tr>
-      <tr><td>gemma-3-it-12B</td><td>144.33</td><td>4.52</td><td>31.03</td><td>161.89</td><td>4.76</td><td>21.29</td><td>207.25</td><td>5.45</td><td>18.32</td></tr>
-      <tr><td>GPT-4o</td><td class="best">60.53</td><td class="best">4.03</td><td>34.61</td><td class="best">83.91</td><td>4.26</td><td>24.72</td><td class="best">82.80</td><td class="best">4.34</td><td>28.89</td></tr>
-      <tr><td>GPT-5.4 mini</td><td>80.62</td><td>4.21</td><td class="best">36.95</td><td>110.07</td><td>4.51</td><td>26.86</td><td>107.86</td><td>4.54</td><td>30.64</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p>GPT-4o consistently achieves the lowest or near-lowest GED and SG&nbsp;&Delta;Con, while Gemma-3-12B exhibits the
-  highest hallucination scores on all three sources; the broadest coverage is attained by Qwen2.5-VL-7B and GPT-5.4
-  mini. ADE20K generally elicits higher hallucination scores than COCO and VG, likely due to its denser and more
-  diverse scene content.</p>
-
-  <h3>Refusal-demanding questions break models most</h3>
-  <p>Per-turn dynamics are measured with VALOR \(1-\mathrm{faith}_i\), the fraction of object mentions at turn \(i\)
-  that match no ground-truth object (the SG-based grader evaluates the accumulated transcript and is unsuitable or
-  costly per turn). Regular, follow-up, and adversarial questions account for most hallucinated turns; although
-  unanswerable questions occur less frequently, they yield the <strong>highest per-turn hallucination rate</strong>.
-  Overall, refusal-demanding questions (adversarial and unanswerable) are more error-prone than fact-seeking ones,
-  particularly when the model can condition on its prior responses.</p>
-
-  <h3>Hallucinations accumulate as the conversation goes on</h3>
-  <p>Without conversation history, the hallucination rate remains low and nearly flat (21&ndash;25% after the opening
-  turns). With history, it begins near 26%, rises to roughly 30&ndash;32% within the first third of the conversation,
-  and then plateaus around 30%. Long contexts increase VLMs' susceptibility to visual hallucination, potentially
-  because attention to the visual input gradually weakens as the dialogue progresses.</p>
+  <h3>False premises and long conversations break models</h3>
+  <p>Unanswerable questions produce the <strong>highest per-turn hallucination rate</strong>, and with conversation
+  history the rate climbs from about 26% to 30&ndash;32% and stays there; without history it stays flat around
+  21&ndash;25%.</p>
   <div class="figrow" style="grid-template-columns:2fr 3fr">
     <figure>
       <img class="zoomable" src="static/images/error_analysis_valor_pie.png" alt="Pie of hallucinated turns: adversarial 37%, follow-up 27%, regular 23%, unanswerable 13%.">
@@ -603,10 +452,8 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   <style>@media (max-width:640px){#rq3 .figrow{grid-template-columns:1fr !important}}</style>
 
   <h3>What the errors look like</h3>
-  <p>Human-annotated errors are dominated by hallucinated objects (62%), particularly in unanswerable and adversarial
-  turns. Wrong attributes account for 20% and frequently arise in follow-up turns, where models revise previously
-  correct attributes under conversational pressure. Wrong relations contribute another 15%, typically asserting an
-  incorrect relation for an existing object.</p>
+  <p>Hallucinated objects dominate (62%), followed by wrong attributes (20%), often revised under follow-up pressure,
+  and wrong relations (15%).</p>
   <div class="qual">
     <div class="qrow">
       <img class="zoomable" src="static/images/qual/14.jpg" alt="An office desk with no cat on it.">
