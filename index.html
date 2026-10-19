@@ -36,7 +36,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);
      font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 a{color:var(--accent2);text-decoration:none}
 a:hover{text-decoration:underline}
 
@@ -47,7 +47,7 @@ header{padding:64px 0 42px;border-bottom:1px solid var(--line);background:var(--
 h1{font-family:var(--serif);font-size:clamp(28px,4.6vw,42px);line-height:1.18;
    color:var(--ink);font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
 h1 .acr{color:var(--accent)}
-.sub{color:var(--muted);font-size:15px;margin:0 0 26px}
+.sub{color:var(--muted);font-size:clamp(17px,2.2vw,20px);line-height:1.5;margin:0 0 26px}
 .authors{font-size:16.5px;color:var(--ink);margin:0 0 4px;line-height:1.9}
 .authors sup,.affil sup{color:var(--muted);font-size:11px;font-weight:600}
 .affil{font-size:14px;color:var(--muted);margin:0 0 6px;line-height:1.8}
@@ -79,7 +79,7 @@ ul.tight{margin:0 0 15px;padding-left:20px}
 ul.tight li{margin:0 0 8px}
 
 /* ---------- breakout width for wide figures ---------- */
-.wide{width:min(1180px,calc(100vw - 32px));position:relative;left:50%;transform:translateX(-50%)}
+.wide{width:min(1320px,calc(100vw - 32px));position:relative;left:50%;transform:translateX(-50%)}
 
 /* ---------- video ---------- */
 .video{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;
@@ -143,9 +143,11 @@ figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
 .card .lbl{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.5}
 
 /* ---------- interactive workflow with ablation bubbles ---------- */
-.hint{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin:0 0 10px}
-.hint .dot{width:18px;height:18px;border-radius:50%;background:var(--hot);color:#fff;display:inline-grid;place-items:center;
-           font-size:11px;font-weight:700;flex:none;box-shadow:0 0 0 4px var(--hot-ring)}
+.hint{display:flex;align-items:center;gap:12px;font-size:17px;line-height:1.5;color:var(--muted);margin:0 0 14px}
+.hint .dots{display:flex;gap:10px;flex:none}
+.hint .dot{width:24px;height:24px;border-radius:50%;background:var(--hot);color:#fff;display:inline-grid;place-items:center;
+           font-size:12.5px;font-weight:700;flex:none;box-shadow:0 0 0 4px var(--hot-ring)}
+.hint .dot.g{background:#2f6fcc;box-shadow:0 0 0 4px rgba(47,111,204,.3)}
 .hotfig{position:relative;border:1px solid var(--line);border-radius:12px;background:#fff;padding:6px}
 .stage{position:relative}
 .stage > img{width:100%;display:block;border-radius:8px}
@@ -177,13 +179,6 @@ figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
 .pop th,.pop td{padding:4px 7px}
 .pop .mini{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0}
 .pop .src{font-size:12px;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--soft);
-      border-radius:999px;padding:5px 12px 5px 6px;font-size:13px;color:var(--ink);cursor:pointer}
-.chip:hover,.chip.on{border-color:var(--hot)}
-.chip i{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--hot);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}
-.chip.grader i{background:#2f6fcc}
-.chip.grader:hover,.chip.grader.on{border-color:#2f6fcc}
 @media (max-width:760px){
   .hot{width:22px;height:22px;font-size:10.5px}
   .pop{position:relative;width:auto;max-width:none;margin-top:12px;box-shadow:none}
@@ -387,14 +382,13 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:14px}
   CEDI develops a <strong>contextualized, interactive examiner</strong> and a <strong>scene graph (SG)-based
   grader</strong>.</p>
 
-  <p class="hint"><span class="dot">1</span> Every orange (examiner) or blue (grader) bubble marks a component we
-  ablated or validated &mdash; hover, tap, or tab to it to see what happens without it.</p>
+  <p class="hint"><span class="dots"><span class="dot">1</span><span class="dot g">7</span></span> <span>Every orange (examiner) or blue (grader) bubble marks a component we
+  ablated or validated &mdash; hover, tap, or tab to it to see what happens without it.</span></p>
   <div class="wide">
     <div class="hotfig" id="hotfig">
       <div class="stage" id="stage"><img src="static/images/workflow.png" alt="Workflow of CEDI. Examiner: a street image is represented as a scene graph whose nodes are split into a Goal 1 subgraph, a Goal 2 subgraph, goal-irrelevant nodes and non-existent nodes (walk sign); questions Q1 to Q4 traverse the subgraph. The conversation transcript goes to the grader, which parses an LLM-predicted graph and compares it to ground truth with Graph Edit Distance."></div>
       <div class="pop" id="pop" role="dialog" aria-live="polite"></div>
     </div>
-    <div class="chips" id="chips"></div>
   </div>
   <p style="margin-top:14px;font-size:14px;color:var(--muted)">Workflow of CEDI, including our contextualized and
   interactive examiner (top) and scene graph (SG)-based grader (bottom).</p>
@@ -1016,7 +1010,7 @@ var BUBBLES = [
     '</tbody></table></div>' }
 ];
 
-var fig = document.getElementById("hotfig"), stage = document.getElementById("stage"), pop = document.getElementById("pop"), chips = document.getElementById("chips");
+var fig = document.getElementById("hotfig"), stage = document.getElementById("stage"), pop = document.getElementById("pop");
 var current = null, pinned = false, hideTimer = null;
 var mobile = window.matchMedia("(max-width:760px)");
 
@@ -1031,20 +1025,10 @@ BUBBLES.forEach(function (b, i) {
   stage.appendChild(btn);
   b.btn = btn;
 
-  var chip = document.createElement("button");
-  chip.type = "button";
-  chip.className = "chip" + (b.side === "g" ? " grader" : "");
-  chip.innerHTML = "<i>" + (i + 1) + "</i>" + b.label;
-  chips.appendChild(chip);
-  b.chip = chip;
-
   btn.addEventListener("mouseenter", function () { if (!pinned && !mobile.matches) showPop(b); });
   btn.addEventListener("mouseleave", function () { if (!pinned) schedHide(); });
   btn.addEventListener("focus", function () { if (!pinned) showPop(b); });
   btn.addEventListener("click", function (e) { e.stopPropagation(); togglePin(b); });
-  chip.addEventListener("click", function (e) { e.stopPropagation(); togglePin(b); });
-  chip.addEventListener("mouseenter", function () { if (!pinned && !mobile.matches) showPop(b); });
-  chip.addEventListener("mouseleave", function () { if (!pinned) schedHide(); });
 });
 pop.addEventListener("mouseenter", function () { clearTimeout(hideTimer); });
 pop.addEventListener("mouseleave", function () { if (!pinned) schedHide(); });
@@ -1059,13 +1043,13 @@ function schedHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function 
 function hidePop(force) {
   if (pinned && !force) return;
   pinned = false; pop.classList.remove("show");
-  BUBBLES.forEach(function (x) { x.btn.classList.remove("on"); x.chip.classList.remove("on"); });
+  BUBBLES.forEach(function (x) { x.btn.classList.remove("on"); });
   current = null;
 }
 function showPop(b) {
   clearTimeout(hideTimer);
   current = b;
-  BUBBLES.forEach(function (x) { x.btn.classList.toggle("on", x === b); x.chip.classList.toggle("on", x === b); });
+  BUBBLES.forEach(function (x) { x.btn.classList.toggle("on", x === b); });
   pop.className = "pop show" + (b.side === "g" ? " g" : "");
   pop.innerHTML = '<button class="x" type="button" aria-label="Close">&times;</button>' +
     '<div class="kind">' + (b.side === "g" ? "Grader &middot; validation" : "Examiner &middot; ablation") + '</div>' + b.html;
