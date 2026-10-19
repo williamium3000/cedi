@@ -125,7 +125,7 @@ figure img{width:100%;max-width:100%;display:block;border:1px solid var(--line);
            border-radius:10px;background:#fff;padding:6px}
 :root[data-theme="dark"] figure img{filter:brightness(.92)}
 figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
-.figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:start}
+.figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:start;max-width:880px;margin:0 auto}
 .figrow figure{margin:12px 0}
 .zoomable{cursor:zoom-in}
 
@@ -175,7 +175,7 @@ figcaption{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.55}
 .legend{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;font-size:14px;margin:8px 0 4px;color:var(--ink)}
 .legend span{display:inline-flex;align-items:center;gap:7px}
 .legend i{display:inline-block;width:22px;height:3px;border-radius:2px}
-.radars{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px}
+.radars{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;max-width:900px;margin:0 auto}
 @media (max-width:760px){.radars{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:460px){.radars{grid-template-columns:1fr}}
 .radars svg{width:100%;height:auto;display:block;overflow:visible}
